@@ -26,4 +26,8 @@ public class Pet {
     public int getAge(){
         return this.age;
     }
+
+    public void updateID(int ID){
+        this.ID = ID;
+    }
 }

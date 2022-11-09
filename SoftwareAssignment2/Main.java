@@ -4,26 +4,47 @@ package softwareassignment2;
 import java.util.Scanner;
 import java.util.ArrayList;
 import java.util.List;
+import java.io.File;
+import java.io.FileNotFoundException;
 
 /**
  *
- * Malcolm Moore 11/3/22
+ * Malcolm Moore 11/9/22
  */
 public class Main {
 
-    /**
-     * @param args the command line arguments
-     */
+
     public static void main(String[] args) {
         Scanner input = new Scanner(System.in);
+        List<Pet> petList = new ArrayList<>();
 
-        List<Pet> petList = new ArrayList<Pet>();
-        Pet Kitty = new Pet(petList.size(), "Kitty", 8);
+        /*Read txt file and create and add pets to petList*/
+        try{
+            File myFile = new File("Pets.txt");
+            Scanner readFile = new Scanner(myFile);
+
+            while (readFile.hasNextLine()){
+                String data = readFile.nextLine();
+
+                String[] splitData = data.split("\\|");
+                Pet newPet = new Pet(petList.size(), splitData[0], Integer.valueOf(splitData[1]));
+                petList.add(newPet);
+
+            }
+
+        } catch (FileNotFoundException e){
+
+            System.out.println("File not found");
+            e.printStackTrace();
+        }
+
+        /*Pets now being added from file*/
+        /*Pet Kitty = new Pet(petList.size(), "Kitty", 8);
         petList.add(Kitty);
         Pet Bruno = new Pet(petList.size(), "Bruno", 7);
         petList.add(Bruno);
         Pet Boomer = new Pet(petList.size(), "Boomer", 8);
-        petList.add(Boomer);
+        petList.add(Boomer);*/
 
         boolean isRunning = true;
 
@@ -39,6 +60,7 @@ public class Main {
             int response = input.nextInt();
             input.nextLine();
 
+            /*Format and display data from petList*/
             if (response == 1){
                 System.out.println(petList.size());
                 System.out.println("+----------------------+");
@@ -53,6 +75,7 @@ public class Main {
 
             }
 
+            /*Add pets until "done" is input*/
             else if (response == 2){
                 boolean isAddingPet = true;
 
@@ -74,10 +97,18 @@ public class Main {
                 }
             }
 
+            /*Remove pet by ID*/
             else if (response == 3){
                 System.out.print("Enter the pet ID to be removed: ");
                 int removePet = input.nextInt();
                 petList.remove(removePet);
+
+                /*Update all IDs affected by removing Pet*/
+                for (Pet p: petList){
+                    if (p.getID() > removePet){
+                        p.updateID(p.getID() - 1);
+                    }
+                }
 
 
             }
