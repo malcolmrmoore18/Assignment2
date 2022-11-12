@@ -9,7 +9,7 @@ import java.io.FileNotFoundException;
 
 /**
  *
- * Malcolm Moore 11/9/22
+ * Malcolm Moore 11/12/22
  */
 public class Main {
 
@@ -86,12 +86,31 @@ public class Main {
                     if (addedPet.equals("done")){
                         isAddingPet = false;
                     }
+
+                    /*Display error if list is at limit of 5 or more*/
+                    else if (petList.size() > 4){
+                        System.out.println("Error: Database is full");
+                    }
+
                     else{
                         String[] splitAddedPet = addedPet.split(" ");
 
-                        Pet newPet = new Pet(petList.size(), splitAddedPet[0], Integer.valueOf(splitAddedPet[1]));
-                        petList.add(newPet);
-                        System.out.println("Pet added!");
+                        /*Determine if given input is valid by array length*/
+                        if (splitAddedPet.length != 2){
+                            System.out.println(addedPet + " is not valid input");
+                        }
+
+                        /*Determine if age is an accepted value*/
+                        else if (Integer.valueOf(splitAddedPet[1]) < 1 || Integer.valueOf(splitAddedPet[1]) > 20){
+                            System.out.println(splitAddedPet[1] + " is not a valid age");
+                        }
+
+                        else{
+                            Pet newPet = new Pet(petList.size(), splitAddedPet[0], Integer.valueOf(splitAddedPet[1]));
+                            petList.add(newPet);
+                            System.out.println("Pet added!");
+                        }
+
                     }
 
                 }
@@ -101,14 +120,30 @@ public class Main {
             else if (response == 3){
                 System.out.print("Enter the pet ID to be removed: ");
                 int removePet = input.nextInt();
-                petList.remove(removePet);
 
-                /*Update all IDs affected by removing Pet*/
-                for (Pet p: petList){
-                    if (p.getID() > removePet){
-                        p.updateID(p.getID() - 1);
+                /*determine if index given is within petList size*/
+                if (removePet < 0 || removePet > petList.size()){
+                    System.out.println("Error: ID " + String.valueOf(removePet) + " does not exist");
+                }
+
+                else{
+                    System.out.println(petList.get(removePet).getName() + " removed");
+                    petList.remove(removePet);
+
+                    /*Update all IDs affected by removing Pet*/
+                    for (Pet p: petList){
+                        if (p.getID() > removePet){
+                            p.updateID(p.getID() - 1);
+                        }
                     }
                 }
+
+
+
+
+
+
+
 
 
             }
